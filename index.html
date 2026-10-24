@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo Pro - Task Manager</title>
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // ডার্ক মোড "class" দিয়ে কন্ট্রোল হবে
+    tailwind.config = { darkMode: 'class' };
+  </script>
+
+  <!-- নিজের CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300">
+
+  <div class="max-w-3xl mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <header class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-3xl font-extrabold gradient-text">Todo Pro</h1>
+        <p class="text-sm text-slate-500 dark:text-slate-400">আপনার কাজ গুছিয়ে রাখুন</p>
+      </div>
+      <button id="themeToggle" class="p-3 rounded-full bg-white dark:bg-slate-800 shadow hover:scale-110 transition" title="Dark / Light">
+        <span id="themeIcon">🌙</span>
+      </button>
+    </header>
+
+    <!-- Stats -->
+    <section class="grid grid-cols-3 gap-3 mb-4">
+      <div class="card p-4 text-center">
+        <p class="text-2xl font-bold" id="statTotal">0</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">মোট</p>
+      </div>
+      <div class="card p-4 text-center">
+        <p class="text-2xl font-bold text-amber-500" id="statActive">0</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">বাকি</p>
+      </div>
+      <div class="card p-4 text-center">
+        <p class="text-2xl font-bold text-emerald-500" id="statDone">0</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">সম্পন্ন</p>
+      </div>
+    </section>
+
+    <!-- Progress bar -->
+    <div class="mb-6">
+      <div class="flex justify-between text-xs mb-1 text-slate-500 dark:text-slate-400">
+        <span>অগ্রগতি</span><span id="progressText">0%</span>
+      </div>
+      <div class="w-full h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+        <div id="progressBar" class="h-full bg-gradient-to-r from-indigo-500 to-emerald-400 progress-bar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Add / Edit Form -->
+    <form id="taskForm" class="card p-4 mb-6 space-y-3">
+      <input id="taskTitle" type="text" maxlength="80" required placeholder="নতুন টাস্ক লিখুন..."
+        class="input" />
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <select id="taskCategory" class="input">
+          <option value="Personal">Personal</option>
+          <option value="Study">Study</option>
+          <option value="Work">Work</option>
+          <option value="Health">Health</option>
+          <option value="Other">Other</option>
+        </select>
+        <select id="taskPriority" class="input">
+          <option value="Low">Low</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="High">High</option>
+        </select>
+        <input id="taskDue" type="date" class="input" />
+      </div>
+      <div class="flex gap-2">
+        <button id="submitBtn" type="submit"
+          class="flex-1 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition">
+          + টাস্ক যোগ করুন
+        </button>
+        <button id="cancelEdit" type="button"
+          class="hidden px-4 py-2.5 rounded-lg bg-slate-300 dark:bg-slate-600 font-semibold">
+          বাতিল
+        </button>
+      </div>
+    </form>
+
+    <!-- Controls -->
+    <section class="card p-4 mb-4 space-y-3">
+      <input id="searchInput" type="text" placeholder="🔍 টাস্ক খুঁজুন..." class="input" />
+
+      <div class="flex flex-wrap gap-2" id="statusFilters">
+        <button data-filter="all" class="filter-btn active">সব</button>
+        <button data-filter="active" class="filter-btn">বাকি</button>
+        <button data-filter="completed" class="filter-btn">সম্পন্ন</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <select id="categoryFilter" class="input">
+          <option value="all">সব ক্যাটাগরি</option>
+          <option value="Personal">Personal</option>
+          <option value="Study">Study</option>
+          <option value="Work">Work</option>
+          <option value="Health">Health</option>
+          <option value="Other">Other</option>
+        </select>
+        <select id="sortSelect" class="input">
+          <option value="newest">নতুন আগে</option>
+          <option value="deadline">ডেডলাইন অনুযায়ী</option>
+          <option value="priority">প্রায়োরিটি অনুযায়ী</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Task List -->
+    <ul id="taskList" class="space-y-3"></ul>
+
+    <!-- Empty state -->
+    <div id="emptyState" class="hidden text-center py-12 text-slate-400">
+      <p class="text-5xl mb-2">📝</p>
+      <p>কোনো টাস্ক নেই</p>
+    </div>
+
+    <!-- Footer actions -->
+    <div class="mt-6 flex justify-end">
+      <button id="clearCompleted" class="text-sm text-rose-500 hover:underline">সম্পন্ন টাস্কগুলো মুছুন</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
